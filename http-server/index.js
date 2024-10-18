@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -22,7 +23,6 @@ fs.readFile("registration.html", (err, registration) => {
   registrationContent = registration;
 });
 
-// eslint-disable-next-line no-undef
 const args = minimist(process.argv.slice(2));
 const port = parseInt(args.port);
 
@@ -30,7 +30,6 @@ http
   .createServer((req, res) => {
     let url = req.url;
     if (url.endsWith(".js")) {
-      // eslint-disable-next-line no-undef
       const file_path = path.join(__dirname, url);
       fs.readFile(file_path, (err, data) => {
         if (err) {
