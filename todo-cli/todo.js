@@ -12,7 +12,8 @@ const todoList = () => {
     // of overdue items accordingly.
     const overdueTodo = [];
     all.filter((entry) => {
-      if (entry.dueDate < new Date().toISOString().slice(0, 10)) overdueTodo.push(entry);
+      if (entry.dueDate < new Date().toISOString().slice(0, 10))
+        overdueTodo.push(entry);
     });
     return overdueTodo;
   };
@@ -22,7 +23,8 @@ const todoList = () => {
     // of todo items that are due today accordingly.
     const todayTodo = [];
     all.filter((entry) => {
-      if (entry.dueDate === new Date().toISOString().slice(0, 10)) todayTodo.push(entry);
+      if (entry.dueDate === new Date().toISOString().slice(0, 10))
+        todayTodo.push(entry);
     });
     return todayTodo;
   };
@@ -32,7 +34,8 @@ const todoList = () => {
     // of todo items that are due later accordingly.
     const duelaterTodo = [];
     all.filter((entry) => {
-      if (entry.dueDate > new Date().toISOString().slice(0, 10)) duelaterTodo.push(entry);
+      if (entry.dueDate > new Date().toISOString().slice(0, 10))
+        duelaterTodo.push(entry);
     });
     return duelaterTodo;
   };
@@ -46,7 +49,8 @@ const todoList = () => {
       .map((entry) => {
         if (entry.completed) check = "[x]";
         else check = "[ ]";
-        if (entry.dueDate === new Date().toISOString().slice(0, 10)) displayDate = "";
+        if (entry.dueDate === new Date().toISOString().slice(0, 10))
+          displayDate = "";
         else displayDate = entry.dueDate;
         return `${check} ${entry.title} ${displayDate}`;
       })
@@ -65,4 +69,4 @@ const todoList = () => {
   };
 };
 
-module.exports=todoList;
+module.exports = todoList;
