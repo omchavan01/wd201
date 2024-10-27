@@ -14,7 +14,7 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "postgresroot",
+    "username": "postgres",
     "password": "sonuom",
     "database": "todo_db_prod",
     "host": "127.0.0.1",
