@@ -15,7 +15,7 @@ describe("Todo Application", function () {
   afterAll(async () => {
     try {
       await db.sequelize.close();
-      await server.close();
+      server.close();
     } catch (error) {
       console.log(error);
     }
@@ -73,5 +73,20 @@ describe("Todo Application", function () {
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
     // FILL IN YOUR CODE HERE
+    const response = await agent.post("/todos").send({
+      title: "Pay rent",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
+    const parsedResponse = JSON.parse(response.text);
+    const todoID = parsedResponse.id;
+
+    const deleteResponse = await agent.delete(`/todos/${todoID}`);
+    expect(deleteResponse.statusCode).toBe(200);
+    expect(JSON.parse(deleteResponse.text)).toBe(true);
+
+    const fetchResponse = await agent.delete(`/todos/${todoID}`);
+    expect(fetchResponse.statusCode).toBe(404);
+    expect(JSON.parse(fetchResponse.text)).toBe(false);
   });
 });

@@ -25,7 +25,11 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static deleteTodo(id) {
-      return this.destroy(id);
+      return this.destroy({
+        where: {
+          id: id,
+        },
+      });
     }
   }
   Todo.init(

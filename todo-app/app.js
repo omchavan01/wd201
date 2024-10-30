@@ -4,7 +4,9 @@ const { Todo } = require("./models");
 const { connect } = require("./connectDB.js");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+
 connect();
+
 app.get("/", function (request, response) {
   response.send("Hello World");
 });
@@ -45,6 +47,10 @@ app.post("/todos", async function (request, response) {
 });
 
 app.put("/todos/:id/markAsCompleted", async function (request, response) {
+  console.log(
+    "We have to mark a Todo as complete with ID: ",
+    request.params.id
+  );
   const todo = await Todo.findByPk(request.params.id);
   try {
     const updatedTodo = await todo.markAsCompleted();
@@ -58,11 +64,10 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
 app.delete("/todos/:id", async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
   // FILL IN YOUR CODE HERE
-  const todo = await Todo.findByPk(request.params.id);
   try {
-    const deletedTodo = await todo.deleteTodo();
-    if (deletedTodo) return response.json(true);
-    else return response.json(false);
+    const deletedTodo = await Todo.deleteTodo(request.params.id);
+    if (deletedTodo) return response.status(200).json(true);
+    else return response.status(404).json(false);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
