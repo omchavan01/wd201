@@ -2,10 +2,25 @@ const express = require("express");
 const app = express();
 const { Todo } = require("./models");
 const { connect } = require("./connectDB.js");
+const path = require("path");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 connect();
+
+// Set EJS as view engine
+app.set("view engine", "ejs");
+
+app.get("/", async (request, response) => {
+  const allTodos = await Todo.displayTodo();
+  if (request.accepts("html")) {
+    response.render("./index.ejs", { allTodos });
+  } else {
+    response.json({ allTodos });
+  }
+});
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (request, response) {
   response.send("Hello World");
