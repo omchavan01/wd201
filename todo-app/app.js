@@ -12,11 +12,18 @@ connect();
 app.set("view engine", "ejs");
 
 app.get("/", async (request, response) => {
-  const allTodos = await Todo.displayTodo();
+  const overdueTodos = await Todo.overdue();
+  const dueTodayTodos = await Todo.dueToday();
+  const dueLaterTodos = await Todo.dueLater();
+
   if (request.accepts("html")) {
-    response.render("./index.ejs", { allTodos });
+    response.render("index.ejs", {
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+    });
   } else {
-    response.json({ allTodos });
+    response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
   }
 });
 
@@ -64,7 +71,7 @@ app.post("/todos", async function (request, response) {
 app.put("/todos/:id/markAsCompleted", async function (request, response) {
   console.log(
     "We have to mark a Todo as complete with ID: ",
-    request.params.id
+    request.params.id,
   );
   const todo = await Todo.findByPk(request.params.id);
   try {
