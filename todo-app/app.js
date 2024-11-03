@@ -1,10 +1,16 @@
+/* eslint-disable no-unused-vars */
 const express = require("express");
 const app = express();
 const { Todo } = require("./models");
 const { connect } = require("./connectDB.js");
 const path = require("path");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const csrf = require("tiny-csrf");
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("A secret string"));
+app.use(csrf("123456789iamasecret987654321look",["POST","PUT","DELETE"]));
 
 connect();
 
@@ -21,6 +27,7 @@ app.get("/", async (request, response) => {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
+      csrfToken: request.csrfToken(),
     });
   } else {
     response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
@@ -29,11 +36,7 @@ app.get("/", async (request, response) => {
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", function (request, response) {
-  response.send("Hello World");
-});
-
-app.get("/todos", async function (_request, response) {
+app.get("/todos", async (request, response) => {
   console.log("Processing list of all Todos ...");
   // FILL IN YOUR CODE HERE
   try {
@@ -48,7 +51,7 @@ app.get("/todos", async function (_request, response) {
   // response.send(todos)
 });
 
-app.get("/todos/:id", async function (request, response) {
+app.get("/todos/:id", async (request, response) => {
   try {
     const todo = await Todo.findByPk(request.params.id);
     return response.json(todo);
@@ -58,17 +61,17 @@ app.get("/todos/:id", async function (request, response) {
   }
 });
 
-app.post("/todos", async function (request, response) {
+app.post("/todos", async (request, response) => {
   try {
     const todo = await Todo.addTodo(request.body);
-    return response.json(todo);
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
 
-app.put("/todos/:id/markAsCompleted", async function (request, response) {
+app.put("/todos/:id/markAsCompleted", async (request, response) => {
   console.log(
     "We have to mark a Todo as complete with ID: ",
     request.params.id,
@@ -83,7 +86,7 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
   }
 });
 
-app.delete("/todos/:id", async function (request, response) {
+app.delete("/todos/:id", async (request, response) => {
   console.log("We have to delete a Todo with ID: ", request.params.id);
   // FILL IN YOUR CODE HERE
   try {
