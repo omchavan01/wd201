@@ -10,7 +10,7 @@ const csrf = require("tiny-csrf");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("A secret string"));
-app.use(csrf("123456789iamasecret987654321look",["POST","PUT","DELETE"]));
+app.use(csrf("123456789iamasecret987654321look", ["POST", "PUT", "DELETE"]));
 
 connect();
 
@@ -32,7 +32,34 @@ app.get("/", async (request, response) => {
       csrfToken: request.csrfToken(),
     });
   } else {
-    response.json({ overdueTodos, dueTodayTodos, dueLaterTodos,completedTodos });
+    response.json({
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      completedTodos,
+    });
+  }
+});
+
+app.put("/todos/:id", async (request, response) => {
+  const todoId = request.params.id;
+  const { completed } = request.body;
+  const overdueTodos = await Todo.overdue();
+  const dueTodayTodos = await Todo.dueToday();
+  const dueLaterTodos = await Todo.dueLater();
+  const completedTodos = await Todo.completed();
+  const updatedTodo = await Todo.setCompletionStatus(todoId, completed);
+  if (request.accepts("html")) {
+    response.render("index.ejs", {
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      completedTodos,
+      updatedTodo,
+      csrfToken: request.csrfToken(),
+    });
+  } else {
+    response.json({ updatedTodo });
   }
 });
 
@@ -73,20 +100,20 @@ app.post("/todos", async (request, response) => {
   }
 });
 
-app.put("/todos/:id/markAsCompleted", async (request, response) => {
-  console.log(
-    "We have to mark a Todo as complete with ID: ",
-    request.params.id,
-  );
-  const todo = await Todo.findByPk(request.params.id);
-  try {
-    const updatedTodo = await todo.markAsCompleted();
-    return response.json(updatedTodo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
+// app.put("/todos/:id/markAsCompleted", async (request, response) => {
+//   console.log(
+//     "We have to mark a Todo as complete with ID: ",
+//     request.params.id
+//   );
+//   const todo = await Todo.findByPk(request.params.id);
+//   try {
+//     const updatedTodo = await todo.markAsCompleted();
+//     return response.json(updatedTodo);
+//   } catch (error) {
+//     console.log(error);
+//     return response.status(422).json(error);
+//   }
+// });
 
 app.delete("/todos/:id", async (request, response) => {
   console.log("We have to delete a Todo with ID: ", request.params.id);
