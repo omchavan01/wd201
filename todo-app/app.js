@@ -124,7 +124,7 @@ app.get("/signup", (request, response) => {
   });
 });
 
-app.get("/login", (request, response) => {
+app.get("/signin", (request, response) => {
   response.render("signin.ejs", {
     csrfToken: request.csrfToken(),
   });
