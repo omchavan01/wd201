@@ -7,66 +7,81 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    // eslint-disable-next-line no-unused-vars
     static associate(models) {
+      Todo.belongsTo(models.User, {
+        foreignKey: "userId",
+      });
       // define association here
     }
 
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+    static addTodo({ title, dueDate, userId }) {
+      return this.create({
+        title: title,
+        dueDate: dueDate,
+        completed: false,
+        userId,
+      });
     }
 
     static async setCompletionStatus(id, status) {
-      await this.update({ completed: status }, { where: { id: id } });
+      await this.update(
+        { completed: status },
+        {
+          where: {
+            id: id,
+          },
+        },
+      );
       return this.findByPk(id);
     }
 
-    static displayTodo() {
-      return this.findAll();
-    }
-
-    static deleteTodo(id) {
+    static deleteTodo(id, userId) {
       return this.destroy({
         where: {
           id: id,
+          userId,
         },
       });
     }
 
-    static overdue() {
+    static overdue(userId) {
       const today = new Date().toISOString().slice(0, 10);
       return this.findAll({
         where: {
           dueDate: { [Op.lt]: today },
           completed: false,
+          userId,
         },
       });
     }
 
-    static dueToday() {
+    static dueToday(userId) {
       const today = new Date().toISOString().slice(0, 10);
       return this.findAll({
         where: {
           dueDate: today,
           completed: false,
+          userId,
         },
       });
     }
 
-    static dueLater() {
+    static dueLater(userId) {
       const today = new Date().toISOString().slice(0, 10);
       return this.findAll({
         where: {
           dueDate: { [Op.gt]: today },
           completed: false,
+          userId,
         },
       });
     }
 
-    static completed() {
+    static completed(userId) {
       return this.findAll({
         where: {
           completed: true,
+          userId,
         },
       });
     }
@@ -80,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Todo",
-    }
+    },
   );
   return Todo;
 };

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sign In</title>
+</head>
+
+<body class="flex flex-col min-h-screen">
+    <div class="flex-grow grid grid-cols-6">
+        <div class="col-start-3 col-span-2 mt-5">
+            <h6 class="py-5 text-gray-500 font-normal text-2xl">Sign in to your account</h6>
+            <form action="/session" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="py-3">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" required autocomplete="off"
+                        class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full">
+                </div>
+                <div class="py-3">
+                    <label for="password">Password</label>
+                    <div class="relative items-center">
+                        <input type="password" name="password" required autocomplete="off" id="pwd"
+                            class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full pr-12">
+                        <img id="eye" class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-5 h-5"
+                            src="/images/eye-hide.png" alt="Show Password">
+                    </div>
+                </div>
+                <div class="py-3">
+                    <button type="submit"
+                        class="bg-green-600 text-white hover:bg-green-700 rounded px-5 py-3 leading-5 font-medium">Sign
+                        in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div><%- include('footer.ejs') %></div>
+</body>
+<script>
+    let eyeicon = document.getElementById('eye');
+    let password = document.getElementById('pwd');
+
+    eyeicon.addEventListener('click', () => {
+        if (password.type === "password") {
+            password.type = "text";
+            eyeicon.src = "/images/eye-show.png";
+        } else {
+            password.type = "password";
+            eyeicon.src = "/images/eye-hide.png";
+        }
+    });
+
+    window.onload = function() {
+        const form = document.querySelector('form');
+        form.reset();
+    };
+</script>
+
+</html>

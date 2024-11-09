@@ -4,65 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="<%= csrfToken %>">
     <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>To-Do Manager</title>
-    <script>
-        let token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-        function updateTodo(id, completed) {
-            fetch(`/todos/${id}`, {
-                method: "put",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    "_csrf": token,
-                    "completed": !completed,
-                }),
-            })
-                .then((result) => {
-                    if (result.ok) window.location.reload();
-                })
-                .catch((err) => console.error(err));
-        }
-
-        function deleteTodo(id) {
-            fetch(`/todos/${id}`, {
-                method: "delete",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    "_csrf": token,
-                }),
-            })
-                .then((result) => {
-                    if (result.ok) window.location.reload();
-                })
-                .catch((err) => console.error(err));
-        }
-    </script>
+    <title>Todo Application</title>
 </head>
 
 <body class="flex flex-col min-h-screen">
     <div class="flex-grow grid grid-cols-6">
         <div class="col-start-3 col-span-2 mt-5">
-            <%- include('header.ejs') %>
-                <form action="/todos" method="post">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <div class="flex gap-3 py-5 mb-3">
-                        <div>
-                            <input type="text" name="title" placeholder="What's next?" required
-                                class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full">
-                        </div>
-                        <div class="flex-auto">
-                            <input type="date" name="dueDate" required
-                                class="border border-gray-300 rounded text-gray-900 p-2 text-sm w-full leading-4">
-                        </div>
-                        <div class="flex-none">
-                            <button type="submit"
-                                class="bg-green-600 text-white rounded px-5 py-2 leading-5 font-medium">Add</button>
-                        </div>
-                    </div>
-                </form>
-                <div><%- include('todos.ejs') %></div>
+            <h1 class="py-5 text-gray-500 font-normal text-2xl">Welcome to the To-Do Application</h1>
+            <p class="py-2">New here? <a href="/signup" class="text-green-600">Sign-up</a></p>
+            <p class="py-2">Already have an account? <a href="/signin" class="text-green-600">Sign-in</a></p>
         </div>
     </div>
     <div><%- include('footer.ejs') %></div>
