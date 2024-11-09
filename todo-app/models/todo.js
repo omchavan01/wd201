@@ -16,15 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
-    static setCompletionStatus(id, status) {
-      return this.update(
-        { completed: status },
-        {
-          where: {
-            id: id,
-          },
-        }
-      );
+    static async setCompletionStatus(id, status) {
+      await this.update({ completed: status }, { where: { id: id } });
+      return this.findByPk(id);
     }
 
     static displayTodo() {

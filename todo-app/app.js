@@ -41,28 +41,6 @@ app.get("/", async (request, response) => {
   }
 });
 
-app.put("/todos/:id", async (request, response) => {
-  const todoId = request.params.id;
-  const { completed } = request.body;
-  const overdueTodos = await Todo.overdue();
-  const dueTodayTodos = await Todo.dueToday();
-  const dueLaterTodos = await Todo.dueLater();
-  const completedTodos = await Todo.completed();
-  const updatedTodo = await Todo.setCompletionStatus(todoId, completed);
-  if (request.accepts("html")) {
-    response.render("index.ejs", {
-      overdueTodos,
-      dueTodayTodos,
-      dueLaterTodos,
-      completedTodos,
-      updatedTodo,
-      csrfToken: request.csrfToken(),
-    });
-  } else {
-    response.json({ updatedTodo });
-  }
-});
-
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/todos", async (request, response) => {
@@ -100,24 +78,24 @@ app.post("/todos", async (request, response) => {
   }
 });
 
-// app.put("/todos/:id/markAsCompleted", async (request, response) => {
-//   console.log(
-//     "We have to mark a Todo as complete with ID: ",
-//     request.params.id
-//   );
-//   const todo = await Todo.findByPk(request.params.id);
-//   try {
-//     const updatedTodo = await todo.markAsCompleted();
-//     return response.json(updatedTodo);
-//   } catch (error) {
-//     console.log(error);
-//     return response.status(422).json(error);
-//   }
-// });
+app.put("/todos/:id", async (request, response) => {
+  console.log(
+    "We have to mark a Todo as complete/incomplete with ID: ",
+    request.params.id
+  );
+  const todoId = request.params.id;
+  const { completed } = request.body;
+  try {
+    const updatedTodo = await Todo.setCompletionStatus(todoId, completed);
+    return response.json(updatedTodo);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
 
 app.delete("/todos/:id", async (request, response) => {
   console.log("We have to delete a Todo with ID: ", request.params.id);
-  // FILL IN YOUR CODE HERE
   try {
     const deletedTodo = await Todo.deleteTodo(request.params.id);
     if (deletedTodo) return response.status(200).json(true);
