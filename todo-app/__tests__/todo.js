@@ -10,10 +10,10 @@ function extractCSRFToken(response) {
   return $("[name=_csrf]").val();
 }
 
-const login = async (agent, username, password) => {
-  let res = await agent.get("/login");
+const signin = async (agent, username, password) => {
+  let res = await agent.get("/signin");
   const csrfToken = extractCSRFToken(res);
-  res = await agent.post("/users").send({
+  res = await agent.post("/session").send({
     email: username,
     password: password,
     _csrf: csrfToken,
@@ -59,7 +59,7 @@ describe("Todo Application", function () {
 
   test("Create a new todo", async () => {
     const agent = request.agent(server);
-    await login(agent, "user.a@test.com", "usera123");
+    await signin(agent, "user.a@test.com", "usera123");
     const res = await agent.get("/todos");
     const csrfToken = extractCSRFToken(res);
     const response = await agent.post("/todos").send({
@@ -73,7 +73,7 @@ describe("Todo Application", function () {
 
   test("Marks a todo as complete or incomplete", async () => {
     const agent = request.agent(server);
-    await login(agent, "user.a@test.com", "usera123");
+    await signin(agent, "user.a@test.com", "usera123");
     let res = await agent.get("/todos");
     let csrfToken = extractCSRFToken(res);
     await agent.post("/todos").send({
@@ -115,7 +115,7 @@ describe("Todo Application", function () {
 
   test("Deletes a todo", async () => {
     const agent = request.agent(server);
-    await login(agent, "user.a@test.com", "usera123");
+    await signin(agent, "user.a@test.com", "usera123");
     let res = await agent.get("/todos");
     let csrfToken = extractCSRFToken(res);
 

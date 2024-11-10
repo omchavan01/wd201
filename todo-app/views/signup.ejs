@@ -15,26 +15,27 @@
         <div class="col-start-3 col-span-2 mt-5">
             <h6 class="py-5 text-gray-500 font-normal text-2xl">Sign up as a new user</h6>
             <form action="/users" method="post">
+                <%- include('notifications.ejs') %>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="py-3">
                     <label for="firstName">First name</label>
-                    <input type="text" name="firstName" required autocomplete="off"
+                    <input type="text" name="firstName" autocomplete="off"
                         class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full">
                 </div>
                 <div class="py-3">
                     <label for="lastName">Last name</label>
-                    <input type="text" name="lastName" required autocomplete="off"
+                    <input type="text" name="lastName" autocomplete="off"
                         class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full">
                 </div>
                 <div class="py-3">
                     <label for="email">Email</label>
-                    <input type="email" name="email" required autocomplete="off"
+                    <input type="email" name="email" autocomplete="off"
                         class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full">
                 </div>
                 <div class="py-3">
                     <label for="password">Password</label>
                     <div class="relative items-center">
-                        <input type="password" name="password" required autocomplete="off" id="pwd"
+                        <input type="password" name="password" autocomplete="off" id="pwd"
                             class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full pr-12">
                         <img id="eye" class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-5 h-5"
                             src="/images/eye-hide.png" alt="Show Password">

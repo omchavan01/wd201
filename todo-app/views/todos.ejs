@@ -46,25 +46,28 @@
         <div class="col-start-3 col-span-2 mt-5">
             <%- include('header.ejs') %>
                 <div class="flex flex-row gap-3 mt-5 mb-5 items-center">
-                    <p class="flex-auto">Welcome <%= loggedInUserName %></p>
-                    <a href="/signout" class="bg-green-600 text-white rounded px-5 py-2 leading-5 font-medium flex-none">Sign Out</a>
+                    <p class="flex-auto">Welcome <%= loggedInUserName %>
+                    </p>
+                    <a href="/signout"
+                        class="bg-green-600 text-white rounded px-5 py-2 leading-5 font-medium flex-none">Sign Out</a>
                 </div>
                 <form action="/todos" method="post">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <div class="flex gap-3 py-5 mb-3">
-                        <div class="flex-auto">
-                            <input type="text" name="title" placeholder="What's next?" required
-                                class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full">
+                    <%- include('notifications.ejs') %>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="flex gap-3 py-5 mb-3">
+                            <div class="flex-auto">
+                                <input type="text" name="title" placeholder="What's next?"
+                                    class="border border-gray-300 rounded text-gray-800 p-2 text-sm w-full">
+                            </div>
+                            <div class="flex-auto">
+                                <input type="date" name="dueDate"
+                                    class="border border-gray-300 rounded text-gray-900 p-2 text-sm w-full leading-4">
+                            </div>
+                            <div class="flex-none">
+                                <button type="submit"
+                                    class="bg-green-600 text-white rounded px-5 py-2 leading-5 font-medium">Add</button>
+                            </div>
                         </div>
-                        <div class="flex-auto">
-                            <input type="date" name="dueDate" required
-                                class="border border-gray-300 rounded text-gray-900 p-2 text-sm w-full leading-4">
-                        </div>
-                        <div class="flex-none">
-                            <button type="submit"
-                                class="bg-green-600 text-white rounded px-5 py-2 leading-5 font-medium">Add</button>
-                        </div>
-                    </div>
                 </form>
                 <div><%- include('todo.ejs') %></div>
         </div>
